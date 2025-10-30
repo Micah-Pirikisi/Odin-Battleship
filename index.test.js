@@ -1,5 +1,6 @@
 const Ship = require("./ship");
 const Gameboard = require("./gameboard");
+const Player = require("./player");
 
 // Ship tests
 it("returns false when not all parts are hit", () => {
@@ -76,5 +77,59 @@ describe("Gameboard", () => {
     ]);
     board.receiveAttack([0, 0]);
     expect(board.allShipsSunk()).toBe(false);
+  });
+});
+
+// Player tests
+describe("Player class", () => {
+  let player, computer, enemyBoard;
+
+  beforeEach(() => {
+    player = new Player(); // human player
+    computer = new Player(true); // computer player
+    enemyBoard = new Gameboard();
+  });
+
+  test("each player has their own gameboard", () => {
+    expect(player.board).toBeInstanceOf(Gameboard);
+    expect(computer.board).toBeInstanceOf(Gameboard);
+    expect(player.board).not.toBe(computer.board);
+  });
+
+  test("human player attacks with given coordinates", () => {
+    // Spy on the enemy board's receiveAttack
+    const spy = jest.spyOn(enemyBoard, "receiveAttack").mockReturnValue(true);
+    const result = player.attack(enemyBoard, [2, 3]);
+
+    expect(spy).toHaveBeenCalledWith([2, 3]);
+    expect(result).toBe(true);
+
+    spy.mockRestore();
+  });
+
+  test("computer player attacks with random coordinates", () => {
+    const spy = jest.spyOn(enemyBoard, "receiveAttack").mockReturnValue(true);
+
+    const result = computer.attack(enemyBoard); // no coords passed
+    expect(spy).toHaveBeenCalled();
+
+    // Check the coords passed were within 0–9 range
+    const coords = spy.mock.calls[0][0];
+    expect(coords[0]).toBeGreaterThanOrEqual(0);
+    expect(coords[0]).toBeLessThan(10);
+    expect(coords[1]).toBeGreaterThanOrEqual(0);
+    expect(coords[1]).toBeLessThan(10);
+
+    spy.mockRestore();
+  });
+
+  test("generateRandomCoords() returns values within 0–9 range", () => {
+    for (let i = 0; i < 20; i++) {
+      const coords = computer.generateRandomCoords();
+      expect(coords[0]).toBeGreaterThanOrEqual(0);
+      expect(coords[0]).toBeLessThan(10);
+      expect(coords[1]).toBeGreaterThanOrEqual(0);
+      expect(coords[1]).toBeLessThan(10);
+    }
   });
 });

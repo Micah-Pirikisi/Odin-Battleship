@@ -9,8 +9,8 @@ class Ship {
   }
 
   isSunk() {
-    return this.hits >= this.length; 
+    return this.hits >= this.length;
   }
 }
 
-module.exports = Ship; 
+module.exports = Ship;
