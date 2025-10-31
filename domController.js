@@ -27,24 +27,37 @@ export function renderBoards(playerBoard, computerBoard) {
       computerGrid.appendChild(computerCell);
     }
   }
+
+  // reveal player's ships during placement: add .ship to each occupied player cell
+  if (playerBoard && playerBoard.ships) {
+    for (const entry of playerBoard.ships) {
+      for (const [sx, sy] of entry.coords) {
+        const shipCell = playerGrid.querySelector(
+          `.cell[data-x="${sx}"][data-y="${sy}"]`
+        );
+        if (shipCell) shipCell.classList.add("ship");
+      }
+    }
+  }
 }
 
 export function updateBoard(selector, gameboard, showShips = false) {
   const boardContainer = document.querySelector(selector);
 
-  for (const cell of boardContainer.children) {
+  for (const cell of boardContainer.querySelectorAll(".cell")) {
     const x = Number(cell.dataset.x);
     const y = Number(cell.dataset.y);
 
-    // reset all classes
+    // reset classes
     cell.classList.remove("hit", "miss", "ship");
 
     // check for hits
     const hit = gameboard.ships.some((entry) =>
-      entry.coords.some(
-        ([cx, cy], i) => cx === x && cy === y && entry.ship.hits[i]
-      )
+      entry.coords.some(([cx, cy], i) => {
+        return cx === x && cy === y && entry.ship.hits[i];
+      })
     );
+
     if (hit) {
       cell.classList.add("hit");
       continue;
@@ -54,19 +67,18 @@ export function updateBoard(selector, gameboard, showShips = false) {
     const miss = gameboard.missedAttacks.some(
       ([mx, my]) => mx === x && my === y
     );
+
     if (miss) {
       cell.classList.add("miss");
       continue;
     }
 
-    // show ships (player’s board only)
+    // show ships if allowed (for player board)
     if (showShips) {
       const hasShip = gameboard.ships.some((entry) =>
         entry.coords.some(([cx, cy]) => cx === x && cy === y)
       );
-      if (hasShip) {
-        cell.classList.add("ship");
-      }
+      if (hasShip) cell.classList.add("ship");
     }
   }
 }

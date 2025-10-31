@@ -9,7 +9,54 @@
   </head>
   <body>
     <h1>Battleship</h1>
-    <button id="randomize-btn">Randomize My Ships</button>
+    <div id="controls">
+      <button id="orientation-btn">Horizontal</button>
+      <button id="randomize-btn">Randomize Ships</button>
+      <button id="remove-ship-btn">Remove Last Ship</button>
+      <button id="two-player-btn">2-Player Mode</button>
+      <div id="ship-palette" aria-label="Ship palette"></div>
+      <div id="instructions" aria-live="polite"></div>
+      <button id="help-btn">Help</button>
+      <button id="reset-btn">Reset Game</button>
+      <div id="status-container">
+        <div class="status-player">
+          <h3>Player</h3>
+          <div id="player-status"></div>
+        </div>
+        <div class="status-opponent">
+          <h3>Opponent</h3>
+          <div id="opponent-status"></div>
+        </div>
+      </div>
+    </div>
     <div id="boards-container"></div>
+    <div id="pass-overlay" class="hidden">
+      <div class="pass-card">
+        <h2 id="pass-title">Pass the device</h2>
+        <p id="pass-instructions">
+          Player X, press Continue when ready to take your turn.
+        </p>
+        <button id="pass-continue">Continue</button>
+      </div>
+    </div>
+    <div id="guidance-overlay" class="hidden">
+      <div class="guidance-card">
+        <h2 id="guidance-title">How to play</h2>
+        <p id="guidance-text"></p>
+        <div class="guidance-controls">
+          <button id="guidance-prev">Prev</button>
+          <button id="guidance-next">Next</button>
+          <button id="guidance-close">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="winner-overlay" class="hidden">
+      <div class="pass-card">
+        <h2 id="winner-title">Game Over</h2>
+        <p id="winner-text"></p>
+        <button id="winner-reset">Reset</button>
+      </div>
+    </div>
   </body>
 </html>
