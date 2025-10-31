@@ -5,6 +5,13 @@ const { human, computer } = startGame();
 
 renderBoards(human.board, computer.board);
 
+// button for random placement
+document.querySelector("#randomize-btn").addEventListener("click", () => {
+  randomizePlayerShips(human);
+  updateBoard("#player-board", human.board, true);
+updateBoard("#computer-board", computer.board, false);
+});
+
 const computerBoardContainer = document.querySelector("#computer-board");
 
 computerBoardContainer.addEventListener("click", (e) => {
@@ -22,7 +29,7 @@ computerBoardContainer.addEventListener("click", (e) => {
   human.attack(computer.board, [x, y]);
 
   // update the UI
-  updateBoard("#computer-board", computer.board);
+  updateBoard("#computer-board", computer.board, false);
 
   // check if computer lost
   if (computer.board.allShipsSunk()) {
@@ -33,7 +40,7 @@ computerBoardContainer.addEventListener("click", (e) => {
   // computer takes a turn
   const [cx, cy] = computer.generateRandomCoords();
   computer.attack(human.board, [cx, cy]);
-  updateBoard("#player-board", human.board);
+  updateBoard("#player-board", human.board, true);
 
   if (human.board.allShipsSunk()) {
     alert("Computer wins!");

@@ -1,11 +1,15 @@
 export function renderBoards(playerBoard, computerBoard) {
-  const playerContainer = document.querySelector("#player-board");
-  const computerContainer = document.querySelector("#computer-board");
+  const container = document.querySelector("#boards-container");
+  container.innerHTML = ""; // clear any previous content
 
-  playerContainer.innerHTML = "";
-  computerContainer.innerHTML = "";
+  // Create both labeled boards (top numbers, left letters)
+  renderLabeledBoard("Your Board", "player-board", container);
+  renderLabeledBoard("Enemy Board", "computer-board", container);
 
-  // generate 10x10 grids
+  // populate 10x10 grid cells inside each board-grid
+  const playerGrid = document.querySelector("#player-board");
+  const computerGrid = document.querySelector("#computer-board");
+
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
       // player's square
@@ -13,35 +17,34 @@ export function renderBoards(playerBoard, computerBoard) {
       playerCell.classList.add("cell");
       playerCell.dataset.x = x;
       playerCell.dataset.y = y;
-      playerContainer.appendChild(playerCell);
+      playerGrid.appendChild(playerCell);
 
       // computer's square
       const computerCell = document.createElement("div");
       computerCell.classList.add("cell");
       computerCell.dataset.x = x;
       computerCell.dataset.y = y;
-      computerContainer.appendChild(computerCell);
+      computerGrid.appendChild(computerCell);
     }
   }
 }
 
-export function updateBoard(selector, gameboard) {
+export function updateBoard(selector, gameboard, showShips = false) {
   const boardContainer = document.querySelector(selector);
 
   for (const cell of boardContainer.children) {
     const x = Number(cell.dataset.x);
     const y = Number(cell.dataset.y);
 
-    // reset classes
-    cell.classList.remove("hit", "miss");
+    // reset all classes
+    cell.classList.remove("hit", "miss", "ship");
 
     // check for hits
     const hit = gameboard.ships.some((entry) =>
-      entry.coords.some(([cx, cy], i) => {
-        return cx === x && cy === y && entry.ship.hits[i]; // Ship tracks hits array
-      })
+      entry.coords.some(
+        ([cx, cy], i) => cx === x && cy === y && entry.ship.hits[i]
+      )
     );
-
     if (hit) {
       cell.classList.add("hit");
       continue;
@@ -51,9 +54,55 @@ export function updateBoard(selector, gameboard) {
     const miss = gameboard.missedAttacks.some(
       ([mx, my]) => mx === x && my === y
     );
-
     if (miss) {
       cell.classList.add("miss");
+      continue;
+    }
+
+    // show ships (player’s board only)
+    if (showShips) {
+      const hasShip = gameboard.ships.some((entry) =>
+        entry.coords.some(([cx, cy]) => cx === x && cy === y)
+      );
+      if (hasShip) {
+        cell.classList.add("ship");
+      }
     }
   }
+}
+
+export function renderLabeledBoard(title, boardId, container) {
+  const letters = "ABCDEFGHIJ".split("");
+
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("board-wrapper");
+
+  const heading = document.createElement("h2");
+  heading.textContent = title;
+  wrapper.appendChild(heading);
+
+  // top labels: empty corner + 1..10
+  const top = document.createElement("div");
+  top.classList.add("top-labels");
+  top.innerHTML =
+    `<div></div>` +
+    Array.from({ length: 10 }, (_, i) => `<div>${i + 1}</div>`).join("");
+  wrapper.appendChild(top);
+
+  // row with side labels (A-J) and the grid
+  const row = document.createElement("div");
+  row.classList.add("board-row");
+
+  const side = document.createElement("div");
+  side.classList.add("side-labels");
+  side.innerHTML = letters.map((l) => `<div>${l}</div>`).join("");
+  row.appendChild(side);
+
+  const grid = document.createElement("div");
+  grid.classList.add("board-grid");
+  grid.id = boardId;
+  row.appendChild(grid);
+
+  wrapper.appendChild(row);
+  container.appendChild(wrapper);
 }

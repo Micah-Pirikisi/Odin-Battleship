@@ -3,24 +3,77 @@ body {
 }
 
 #boards-container {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+  margin-top: 30px;
 }
 
-#player-board,
-#computer-board {
+.board-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: sans-serif;
+}
+
+.board-wrapper h2 {
+  margin-bottom: 10px;
+}
+
+.top-labels {
   display: grid;
-  grid-template-columns: repeat(10, 35px);
-  grid-template-rows: repeat(10, 35px);
-  margin-bottom: 20px;
+  grid-template-columns: repeat(11, 30px); /* 1 empty + 10 labels */
+  justify-content: start;
+  margin-bottom: 2px;
+}
+
+.top-labels div {
+  text-align: center;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.board-row {
+  display: flex;
+}
+
+.side-labels {
+  display: grid;
+  grid-template-rows: repeat(10, 30px);
+  margin-right: 2px;
+}
+
+.side-labels div {
+  text-align: center;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 30px);
+  grid-template-rows: repeat(10, 30px);
+  gap: 2px;
 }
 
 .cell {
   width: 30px;
   height: 30px;
-  background-color: rgb(232, 249, 255);
+  background-color: lightblue;
   border: 1px solid #333;
+  cursor: pointer;
+}
+
+.cell:hover {
+  outline: 2px solid #ffa500;
+}
+
+.cell.ship {
+  background-color: navy;
 }
 
 .cell.hit {
@@ -28,5 +81,5 @@ body {
 }
 
 .cell.miss {
-  background-color: rgb(255, 243, 75);
+  background-color: white;
 }
