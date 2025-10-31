@@ -1,6 +1,6 @@
-const Gameboard = require("./gameboard");
+import Gameboard from "./gameboard.js";
 
-class Player {
+export default class Player {
   constructor(isComputer = false) {
     this.board = new Gameboard();
     this.isComputer = isComputer;
@@ -19,5 +19,3 @@ class Player {
     return [x, y];
   }
 }
-
-module.exports = Player; 

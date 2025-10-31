@@ -1,9 +1,9 @@
-const Ship = require("./ship");
+import Ship from "./ship.js"
 
-class Gameboard {
+export default class Gameboard {
   constructor() {
     this.ships = [];
-    this.missedShots = [];
+    this.missedAttacks = [];
     this.board = [];
   }
 
@@ -18,11 +18,11 @@ class Gameboard {
         ([x, y]) => x === attack[0] && y === attack[1]
       );
       if (index !== -1) {
-        entry.ship.hit();
+        entry.ship.hit(index);
         return true;
       }
     }
-    this.missedShots.push(attack);
+    this.missedAttacks.push(attack);
     return false;
   }
 
@@ -30,5 +30,3 @@ class Gameboard {
     return this.ships.every((entry) => entry.ship.isSunk());
   }
 }
-
-module.exports = Gameboard;

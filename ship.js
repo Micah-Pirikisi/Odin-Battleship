@@ -1,16 +1,14 @@
-class Ship {
+export default class Ship {
   constructor(length) {
     this.length = length;
-    this.hits = 0;
+    this.hits = new Array(length).fill(false);;
   }
 
-  hit() {
-    this.hits++;
+  hit(index) {
+    this.hits[index] = true;
   }
 
   isSunk() {
-    return this.hits >= this.length;
+    return this.hits.every(Boolean);
   }
 }
-
-module.exports = Ship;
